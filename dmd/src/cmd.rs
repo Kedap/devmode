@@ -1,13 +1,13 @@
 use anyhow::{bail, Context};
 use anyhow::Result;
 use clap::ArgMatches;
-use dmdlib::utils::clone::Clone;
-use dmdlib::utils::config::{AppOptions, ConfigWriter};
-use dmdlib::utils::constants::messages::APP_OPTIONS_NOT_FOUND;
-use dmdlib::utils::constants::patterns::GIT_URL;
-use dmdlib::utils::host::{Host, is_host};
-use dmdlib::utils::fork::Fork;
-use dmdlib::utils::project::Project;
+use libdmd::utils::clone::Clone;
+use libdmd::utils::config::{AppOptions, ConfigWriter};
+use libdmd::utils::constants::messages::APP_OPTIONS_NOT_FOUND;
+use libdmd::utils::constants::patterns::GIT_URL;
+use libdmd::utils::fork::Fork;
+use libdmd::utils::host::{Host, is_host};
+use libdmd::utils::project::Project;
 use regex::bytes::Regex;
 
 use crate::cli::{clone_setup, config_all, config_editor, config_host, config_owner, fork_setup};

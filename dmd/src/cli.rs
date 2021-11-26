@@ -1,9 +1,9 @@
 use anyhow::Result;
-use dmdlib::utils::clone::Clone;
-use dmdlib::utils::config::AppOptions;
-use dmdlib::utils::editor::{Editor, EditorApp};
-use dmdlib::utils::fork::Fork;
-use dmdlib::utils::host::Host;
+use libdmd::utils::clone::Clone;
+use libdmd::utils::config::AppOptions;
+use libdmd::utils::editor::{Editor, EditorApp};
+use libdmd::utils::fork::Fork;
+use libdmd::utils::host::Host;
 use requestty::Answer;
 
 use crate::cmd::*;
