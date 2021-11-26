@@ -16,6 +16,7 @@ pub trait ConfigWriter {
     fn write_to_config(&self) -> Result<()>;
     fn write(&self) -> Result<()>;
     fn initialize(&self) -> Result<()>;
+    fn verify_identity(&self) -> Result<bool>;
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, Eq, PartialEq)]
@@ -56,8 +57,7 @@ impl AppOptions {
 
 impl ConfigWriter for AppOptions {
     fn write_to_config(&self) -> Result<()> {
-        let data_dir = data().join(DEVMODE_DIR);
-        if !data_dir.exists() {
+        if !self.verify_identity()? {
             self.initialize()?;
             self.write()
         } else if &AppOptions::current().unwrap() != self {
@@ -66,6 +66,22 @@ impl ConfigWriter for AppOptions {
             println!("{}", NO_SETTINGS_CHANGED);
             Ok(())
         }
+    }
+
+    fn verify_identity(&self) -> Result<bool> {
+        let dirs = [
+            data().join(DEVMODE_DIR),
+            data().join(CONFIG_DIR),
+            data().join(PATHS_DIR),
+            data().join(CONFIG_FILE),
+            data().join(LOGS_DIR)
+        ];
+        for path in dirs {
+            if !path.exists() {
+                return Ok(false);
+            }
+        }
+        return Ok(true);
     }
 
     fn write(&self) -> Result<()> {
