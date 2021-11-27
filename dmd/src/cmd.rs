@@ -117,9 +117,8 @@ impl<'a> Cmd {
         match self {
             Cmd::Clone(clone) => {
                 if let Host::None = clone.host {
-                    bail!("You can't do this unless you set your configuration with `devmode config`\n\
-                    In the meantime, you can clone by specifying <host> <owner> <repo> \n\n\
-                    Host should be one of the following: \n1. GitHub \n2. GitLab")
+                    bail!("You can't do this unless you set your configuration with `dmd config -a`\n\
+                    In the meantime, you can clone by specifying <host> <owner> <repo>")
                 } else if clone.owner.is_empty() {
                     bail!("Missing arguments: <owner> <repo>")
                 } else if clone.repos.is_empty() {
@@ -147,9 +146,8 @@ impl<'a> Cmd {
             }
             Cmd::Fork(fork) => {
                 if let Host::None = fork.host {
-                    bail!("You can't do this unless you set your configuration with `devmode config`\n\
-                    In the meantime, you can clone by specifying <host> <owner> <repo> \n\n\
-                    Host should be one of the following: \n1. GitHub \n2. GitLab")
+                    bail!("You can't do this unless you set your configuration with `dmd config -a`\n\
+                    In the meantime, you can clone by specifying <host> <owner> <repo>")
                 } else if fork.owner.is_empty() {
                     bail!("Missing arguments: <owner> <repo>")
                 } else if fork.repo.is_empty() {
@@ -157,7 +155,7 @@ impl<'a> Cmd {
                 } else if fork.upstream.is_empty() {
                     bail!(
                         "Missing arguments: <upstream>. 
-                        For example ... -u https://git.host.pro/user/repo-upstream"
+                        For example ... -u https://github.com/user/upstream"
                     )
                 } else {
                     match fork.clone_repo() {
