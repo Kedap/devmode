@@ -24,10 +24,10 @@ SUBCOMMANDS:
 ## Installation
 
 #### Cargo
+
 ```
 cargo install dmd
 ```
-
 
 ## Configuration
 
@@ -39,14 +39,15 @@ You can set your favorite text editor running:
 
 ```
 dmd config -e --editor
-``` 
+```
+
 ### Git Host
 
 You can set your Git host running:
 
 ```
 dmd config -h --host
-``` 
+```
 
 ### Git User
 
@@ -54,7 +55,7 @@ You can set your Git user running:
 
 ```
 dmd config -o --owner
-``` 
+```
 
 ### Configure everything
 
@@ -62,7 +63,7 @@ You can configure everything running:
 
 ```
 dmd config -a --all
-``` 
+```
 
 ### Show config
 
@@ -75,7 +76,7 @@ Current settings:
 Host: GitHub
 Owner: edfloreshz
 Editor: Visual Studio Code
-``` 
+```
 
 ## Clone a repo
 
@@ -159,12 +160,14 @@ You will be presented with the following setup:
 
 Cloning edfloreshz/blog from GitHub...
 ```
+
 ## Clone and set upstream (fork)
 
-Clone a repo and set upstream, ideal for forks, when you clone a repository it will be stored to your 
-filesystem using a specific folder structure. Similar to how `dmd cl` works.
+Clone a repo and set upstream, ideal for forks, when you clone a repository it will be stored to your filesystem using a
+specific folder structure. Similar to how `dmd cl` works.
 
 ### Usage
+
 ```
     dmd fork --upstream <upstream> [args]...
 
@@ -179,7 +182,9 @@ ARGS:
     <args>...    Provide either a Git <url> or a Git <host> <owner> <repo>.
 
 ```
+
 ### Clone with url
+
 Use the `--upstream` or `-u` to set the upstream repository, then specify the repository that you wish to modify.
 
 ```
@@ -187,12 +192,15 @@ dmd fork --upstream https://github.com/user/repo https://github.com/your-user/yo
 ```
 
 ### Clone with upstream URL and remaining parameters.
+
 ```
 dmd fk github <provider> <user> <forked-repo> -u <url>
 ```
+
 ### Just clone with the upstream URL
 
 This will launch a clone setup and guide you throught the cloning process.
+
 ```
 dmd fork -u https://github.com/user/repo
 ? Choose your Git host: ›
@@ -207,7 +215,7 @@ Setting https://github.com/user/repo how upstream
 
 ## Open a project
 
-Opens a project with your selected text editor. 
+Opens a project with your selected text editor.
 
 You can also use `dmd o`
 
@@ -232,4 +240,5 @@ dmd open <project>
 If two or more projects with the same name are found, you will have to choose which one to open.
 
 ## Proposals
+
 If you have a proposal for a new feature, open a new [issue](https://github.com/edfloreshz/devmode/issues).
