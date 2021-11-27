@@ -1,8 +1,8 @@
 name: (Dev)mode
-version: "0.1.2"
+version: "0.1.3"
 author: "Eduardo F. <edfloreshz@gmail.com>"
 about: "Dev(mode) is a project management utility for developers."
-settings: [ ArgRequiredElseHelp, ColoredHelp ]
+settings: [ArgRequiredElseHelp, ColoredHelp]
 subcommands:
   - clone:
       about: Clones a utils repository in a specific folder structure
