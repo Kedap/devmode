@@ -1,9 +1,6 @@
 use crate::config::editor::Editor;
 use anyhow::Result;
-use libdmd::utils::config::config::Config;
-use libdmd::utils::config::directory::Directory;
-use libdmd::utils::config::file::File;
-use libdmd::utils::config::format::FileFormat;
+use libdmd::utils::config::config::{Config, Element, Format};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, Eq, PartialEq)]
@@ -21,20 +18,16 @@ impl Settings {
             editor,
         }
     }
-    pub fn init(&self) -> Result<()> {
+    pub fn init(&self) -> Result<Config> {
         Config::new()
-            .project("devmode")
-            .dir(
-                Directory::new().name("config").file(
-                    File::new()
-                        .name("config")
-                        .format(FileFormat::TOML)
-                        .data(self)?,
-                ),
-            )
-            .dir(Directory::new().name("logs"))
-            .dir(Directory::new().name("paths"));
-        Ok(())
+            .name("devmode")
+            .author("Eduardo Flores")
+            .about("Development management app.")
+            .version("0.1.1")
+            .add(Element::new("config").child(Element::new("config.toml").format(Format::File)))
+            .add(Element::new("logs"))
+            .add(Element::new("paths").child(Element::new("devpaths").format(Format::File)))
+            .write()
     }
     pub fn show(&self) {
         println!(

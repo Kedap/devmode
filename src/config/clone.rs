@@ -5,28 +5,28 @@ use git2::Repository;
 use libdmd::home;
 use regex::bytes::Regex;
 
-pub struct Clone {
+pub struct CloneAction {
     pub host: Host,
     pub owner: String,
     pub repos: Vec<String>,
 }
 
-impl Default for Clone {
+impl Default for CloneAction {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Clone {
+impl CloneAction {
     pub fn new() -> Self {
-        Clone {
+        CloneAction {
             host: Host::None,
             owner: String::new(),
             repos: Vec::new(),
         }
     }
     pub fn from(host: Host, owner: String, repos: Vec<String>) -> Self {
-        Clone { host, owner, repos }
+        CloneAction { host, owner, repos }
     }
     pub fn url(&self, index: usize) -> String {
         format!(
@@ -52,7 +52,7 @@ impl Clone {
         }
         Ok(())
     }
-    pub fn parse_url(url: &str, rx: Regex) -> Result<Clone> {
+    pub fn parse_url(url: &str, rx: Regex) -> Result<CloneAction> {
         let captures = rx.captures(url.as_ref()).unwrap();
         let host = captures
             .get(4)
@@ -66,6 +66,10 @@ impl Clone {
             .get(7)
             .map(|m| String::from_utf8(Vec::from(m.as_bytes())).unwrap())
             .with_context(|| UNABLE_TO_MAP_URL)?;
-        Ok(Clone::from(Host::from(host.into()), owner, vec![repo]))
+        Ok(CloneAction::from(
+            Host::from(host.into()),
+            owner,
+            vec![repo],
+        ))
     }
 }

@@ -32,30 +32,13 @@ pub mod messages {
     pub const UNABLE_TO_MAP_URL: &str = "Could not map url.";
     pub const FAILED_TO_CLONE_REPO: &str = "Failed to clone repository.";
     pub const FAILED_TO_SET_REMOTE: &str = "Failed to set remote.";
-    pub const DATA_DIR_NOT_CREATED: &str = "Data directory not yet created.";
-    pub const HOME_DIR_NOT_CREATED: &str = "Home directory not yet created.";
     pub const OPENING_WARNING: &str =
         "If the editor does not support openning from a path, you'll have to open it yourself.";
     pub const NO_EDITOR_SET: &str =
         "No editor set, run devmode config -e, --editor to configure it.";
     pub const APP_OPTIONS_NOT_FOUND: &str = "The current app options could not be found.";
 
-    pub fn failed_to(action: &str, obj: &str) -> String {
+    pub fn _failed_to(action: &str, obj: &str) -> String {
         format!("Failed to {} `{}`.", action, obj)
-    }
-}
-
-pub mod paths {
-    pub mod folders {
-        pub const DEVELOPER_DIR: &str = "Developer";
-        pub const DEVMODE_DIR: &str = "devmode";
-        pub const CONFIG_DIR: &str = "devmode/config";
-        pub const LOGS_DIR: &str = "devmode/logs";
-        pub const PATHS_DIR: &str = "devmode/paths";
-    }
-
-    pub mod files {
-        pub const DEVPATHS_FILE: &str = "devmode/paths/devpaths";
-        pub const CONFIG_FILE: &str = "devmode/config/config.toml";
     }
 }

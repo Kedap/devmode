@@ -1,9 +1,9 @@
-use crate::config::clone::Clone;
+use crate::config::clone::CloneAction;
 use crate::config::fork::Fork;
 use crate::config::host::{is_host, Host};
 use crate::config::project::Project;
 use crate::config::settings::Settings;
-use crate::constants::constants::messages::{APP_OPTIONS_NOT_FOUND, FAILED_TO_WRITE_CONFIG};
+use crate::constants::constants::messages::{APP_OPTIONS_NOT_FOUND, FAILED_TO_PARSE, FAILED_TO_WRITE_CONFIG, NO_SETTINGS_CHANGED, SETTINGS_UPDATED};
 use crate::constants::constants::patterns::GIT_URL;
 use anyhow::Result;
 use anyhow::{bail, Context};
@@ -11,11 +11,12 @@ use clap::ArgMatches;
 use libdmd::utils::config::config::Config;
 use libdmd::utils::config::format::FileFormat::TOML;
 use regex::bytes::Regex;
+use std::clone::Clone;
 
 use crate::cli::{clone_setup, config_all, config_editor, config_host, config_owner, fork_setup};
 
 pub enum Cmd {
-    Clone(Clone),
+    Clone(CloneAction),
     Fork(Fork),
     Open(Project),
     Config(Settings),
@@ -36,13 +37,13 @@ impl<'a> Cmd {
             if args.is_empty() {
                 clone_setup()
             } else if rx.is_match(first.as_ref()) {
-                let clone = Clone::parse_url(first, rx)?;
+                let clone = CloneAction::parse_url(first, rx)?;
                 Ok(Cmd::Clone(clone))
             } else if is_host(&args) {
                 let host = Host::from(first.into());
                 let owner = args.get(1).map(|a| a.to_string());
                 let repo = args.get(2).map(|a| a.to_string());
-                Ok(Cmd::Clone(Clone::from(
+                Ok(Cmd::Clone(CloneAction::from(
                     host,
                     owner.unwrap(),
                     vec![repo.unwrap()],
@@ -52,7 +53,7 @@ impl<'a> Cmd {
                     .with_context(|| APP_OPTIONS_NOT_FOUND)?;
                 let host = Host::from(options.host);
                 let repos = args.iter().map(|a| a.to_string()).collect::<Vec<String>>();
-                Ok(Cmd::Clone(Clone::from(host, options.owner, repos)))
+                Ok(Cmd::Clone(CloneAction::from(host, options.owner, repos)))
             }
         } else if let Some(matches) = matches.subcommand_matches("fork") {
             let clone_arg = matches
@@ -130,7 +131,11 @@ impl<'a> Cmd {
                     ))
                 }
             } else {
-                Ok(config_all().unwrap())
+                let cmd = config_all().unwrap();
+                if let Cmd::Config(settings) = &cmd {
+                    settings.init()?;
+                }
+                Ok(cmd)
             }
         } else {
             Ok(Cmd::None)
@@ -160,8 +165,14 @@ impl<'a> Cmd {
                     open.open()
                 }
             }
-            Cmd::Config(options) => {
-                Config::set::<Settings>("devmode/config/config.toml", options, TOML)
+            Cmd::Config(options) => { // Verificar si las opciones nuevas son iguales a las opciones actuales.
+                if options != &Config::get::<Settings>("devmode/config/config.toml", TOML).with_context(|| FAILED_TO_PARSE)? {
+                    Config::set::<Settings>("devmode/config/config.toml", options.clone(), TOML).with_context(|| FAILED_TO_WRITE_CONFIG)?;
+                    println!("{}", SETTINGS_UPDATED);
+                } else {
+                    println!("{}", NO_SETTINGS_CHANGED);
+                }
+                Ok(())
             }
             Cmd::ShowConfig => {
                 Config::get::<Settings>("devmode/config/config.toml", TOML)

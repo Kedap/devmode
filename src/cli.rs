@@ -1,4 +1,4 @@
-use crate::config::clone::Clone;
+use crate::config::clone::CloneAction;
 use crate::config::editor::Editor;
 use crate::config::editor_app::EditorApp;
 use crate::config::fork::Fork;
@@ -12,7 +12,7 @@ use requestty::Answer;
 use crate::cmd::*;
 
 pub fn clone_setup() -> Result<Cmd> {
-    let mut clone = Clone::new();
+    let mut clone = CloneAction::new();
     let question = requestty::Question::select("host")
         .message("Choose your Git host:")
         .choices(vec!["GitHub", "GitLab"])
@@ -182,7 +182,6 @@ pub fn config_editor() -> Option<Cmd> {
         .build();
     let editor = if let Answer::ListItem(i) = requestty::prompt_one(question).ok()? {
         if i.text.to_lowercase() == "custom" {
-            let mut command: Option<String> = None;
             let question = requestty::Question::input("command")
                 .message("Editor command:")
                 .validate(|owner, _previous| {
@@ -194,7 +193,7 @@ pub fn config_editor() -> Option<Cmd> {
                 })
                 .build();
             if let Answer::String(cmd) = requestty::prompt_one(question).ok()? {
-                command = Option::from(cmd);
+                let command = Option::from(cmd);
                 Some(Editor::custom(command.unwrap()))
             } else {
                 None
