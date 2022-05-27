@@ -3,9 +3,10 @@ use clap::{Parser, Subcommand};
 use libset::config::Config;
 use libset::format::FileFormat;
 use regex::bytes::Regex;
-use requestty::{Answer, Question};
+use requestty::{Answer, PromptModule, Question};
 
 use crate::config::application::Application;
+use crate::config::create::CreateAction;
 use crate::config::editor::Editor;
 use crate::config::fork::Fork;
 use crate::config::host::{is_host, Host};
@@ -40,6 +41,15 @@ pub enum Commands {
         #[clap(help = "Provide a project name")]
         #[clap(takes_value = true, required = true)]
         project: String,
+    },
+    #[clap(about = "Create new repository.", alias = "cr")]
+    Create {
+        #[clap(
+            help = "Provide a new project name.",
+            takes_value = true,
+            required = true
+        )]
+        project: Vec<String>,
     },
     #[clap(
         about = "Clones a repo and sets the upstream to your fork.",
@@ -99,6 +109,7 @@ impl Cli {
                 owner,
                 host,
             } => Cli::config(map, show, all, editor, owner, host),
+            Commands::Create { project } => Cli::create(project),
         }
     }
     fn clone(args: &[String], rx: Regex) -> Result<()> {
@@ -200,6 +211,12 @@ impl Cli {
             settings.show();
         }
         Ok(())
+    }
+    fn create(projects: &[String]) -> Result<()> {
+        let options = Config::get::<Settings>("devmode/config/config.toml", FileFormat::TOML)
+            .with_context(|| APP_OPTIONS_NOT_FOUND)?;
+        let create = CreateAction::from(&options.owner, projects.to_vec());
+        create.run()
     }
 }
 

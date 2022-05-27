@@ -31,6 +31,7 @@ pub mod messages {
     pub const FAILED_TO_PARSE: &str = "Failed to parse app options.";
     pub const UNABLE_TO_MAP_URL: &str = "Could not map url.";
     pub const FAILED_TO_CLONE_REPO: &str = "Failed to clone repository.";
+    pub const FAILED_TO_CREATE_REPO: &str = "Failed to create repository.";
     pub const FAILED_TO_SET_REMOTE: &str = "Failed to set remote.";
     pub const OPENING_WARNING: &str =
         "If the editor does not support openning from a path, you'll have to open it yourself.";
