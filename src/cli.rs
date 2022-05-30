@@ -50,6 +50,15 @@ pub enum Commands {
             required = true
         )]
         project: Vec<String>,
+        #[clap(
+            help = "Set the lang to your new project",
+            short = 'l',
+            long = "lang",
+            takes_value = true,
+            required = false,
+            default_value = ""
+        )]
+        lang: String,
     },
     #[clap(
         about = "Clones a repo and sets the upstream to your fork.",
@@ -109,7 +118,7 @@ impl Cli {
                 owner,
                 host,
             } => Cli::config(map, show, all, editor, owner, host),
-            Commands::Create { project } => Cli::create(project),
+            Commands::Create { project, lang } => Cli::create(project, lang.to_string()),
         }
     }
     fn clone(args: &[String], rx: Regex) -> Result<()> {
@@ -212,10 +221,10 @@ impl Cli {
         }
         Ok(())
     }
-    fn create(projects: &[String]) -> Result<()> {
+    fn create(projects: &[String], lang: String) -> Result<()> {
         let options = Config::get::<Settings>("devmode/config/config.toml", FileFormat::TOML)
             .with_context(|| APP_OPTIONS_NOT_FOUND)?;
-        let create = CreateAction::from(&options.owner, projects.to_vec());
+        let create = CreateAction::from(&options.owner, projects.to_vec(), lang);
         create.run()
     }
 }
