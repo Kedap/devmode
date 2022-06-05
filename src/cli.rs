@@ -3,7 +3,7 @@ use clap::{Parser, Subcommand};
 use libset::config::Config;
 use libset::format::FileFormat;
 use regex::bytes::Regex;
-use requestty::{Answer, PromptModule, Question};
+use requestty::{Answer, Question};
 
 use crate::config::application::Application;
 use crate::config::create::CreateAction;
